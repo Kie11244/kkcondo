@@ -11,6 +11,7 @@ import { FaqSection } from './components/FaqSection.tsx';
 import { Footer } from './components/Footer.tsx';
 import { Icon } from './components/Icon.tsx';
 import { PropertyDetailPage } from './components/PropertyDetailPage.tsx';
+import { AdminDashboard } from './components/AdminDashboard.tsx';
 import type { Language } from './types.ts';
 
 declare global {
@@ -22,6 +23,7 @@ declare global {
 const App: React.FC = () => {
     const [lang, setLang] = useState<Language>('th');
     const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
+    const [isAdminView, setIsAdminView] = useState<boolean>(() => window.location.hash === '#admin');
 
     useEffect(() => {
         if (window.lucide) {
@@ -33,6 +35,15 @@ const App: React.FC = () => {
         document.documentElement.lang = lang === 'en' ? 'en' : 'th';
     }, [lang]);
 
+    useEffect(() => {
+        const handleHashChange = () => {
+            setIsAdminView(window.location.hash === '#admin');
+        };
+
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
+    }, []);
+
     const handleSelectProperty = (id: number) => {
         setSelectedPropertyId(id);
         window.scrollTo(0, 0); // Scroll to top on page change
@@ -41,6 +52,17 @@ const App: React.FC = () => {
     const handleBackToListings = () => {
         setSelectedPropertyId(null);
     };
+
+    if (isAdminView) {
+        return (
+            <AdminDashboard
+                onClose={() => {
+                    window.location.hash = '';
+                    setIsAdminView(false);
+                }}
+            />
+        );
+    }
 
     return (
         <>

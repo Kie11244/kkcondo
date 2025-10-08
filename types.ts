@@ -31,6 +31,19 @@ export interface Project {
   imageUrl: string;
 }
 
+export type UnitStatus = 'available' | 'reserved' | 'sold';
+
+export interface Unit {
+  id?: string;
+  projectId: string;
+  name: string;
+  bedrooms: number;
+  bathrooms: number;
+  size: number;
+  price: number;
+  status: UnitStatus;
+}
+
 export interface Testimonial {
     id: number;
     name: string;
